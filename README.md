@@ -36,4 +36,5 @@ cut -f2 SimRAD.barcodes > barcodes
 head barcodes
 ```
 **Install Stacks package with process_radtags**
+
 [Download Stacks from] (http://catchenlab.life.illinois.edu/stacks/)
