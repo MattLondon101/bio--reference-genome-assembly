@@ -8,7 +8,15 @@ This guide describes the process of using genetic sequence data to plot referenc
 **Requirements**
 * Linux OS (I used Windows Subsystem for Linux in Windows 10)
 * dDocent (a bash wrapper to QC, assemble, map, and call SNPs from almost any kind of RAD sequencing)
-  * with conda installed in your Linux terminal enter:
+  * with conda installed in your Linux terminal:
 ```
+# add the bioconda channel
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+# install dDocent and activate dDocent environment
 conda install ddocent
+conda create -n ddocent_env ddocent
+source activate ddocent_env
 ```
+
