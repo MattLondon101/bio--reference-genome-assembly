@@ -63,3 +63,7 @@ curl -L -O https://github.com/jpuritz/dDocent/raw/master/Rename_for_dDocent.sh
 bash Rename_for_dDocent.sh SimRAD.barcodes
 ls *.fq.gz
 ```
+There should now be 40 individually labeled .F.fq.gz and 40 .R.fq.gz. Twenty from PopA and Twenty from PopB. 
+
+**Assemble RAD data**
+Create a set of unique
