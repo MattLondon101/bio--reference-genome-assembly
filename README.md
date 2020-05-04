@@ -153,4 +153,7 @@ mawk '{c= c + 1; print ">Contig_" c "\n" $1}' totaluniqseq > uniq.fasta
 At this point, dDocent also checks for reads that have a substantial amount of Illumina adapter in them.
 Our data is simulated and does not contain adapter, so we'll skip that step for the time being.
 
+**Assemble Reference Contigs**  
+Extract forward reads
+
 
