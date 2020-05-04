@@ -154,6 +154,68 @@ At this point, dDocent also checks for reads that have a substantial amount of I
 Our data is simulated and does not contain adapter, so we'll skip that step for the time being.
 
 **Assemble Reference Contigs**  
-Extract forward reads
+Extract forward reads with the sed command to replace the 10N separator into a tab character and then use the cut function to split the files into forward reads.
+```
+sed -e 's/NNNNNNNNNN/\t/g' uniq.fasta | cut -f1 > uniq.F.fasta
+```
+Cluster all forward reads by 80% similarity. 
+```
+cd-hit-est -i uniq.F.fasta -o xxx -c 0.8 -T 0 -M 0 -g 1
+```
+Convert output of CD-hit to match output of first phase of rainbow.
+```
+mawk '{if ($1 ~ /Cl/) clus = clus + 1; else  print $3 "\t" clus}' xxx.clstr | sed 's/[>Contig_,...]//g' | sort -g -k1 > sort.contig.cluster.ids
+paste sort.contig.cluster.ids totaluniqseq > contig.cluster.totaluniqseq
+sort -k2,2 -g contig.cluster.totaluniqseq | sed -e 's/NNNNNNNNNN/\t/g' > rcluster
+```
+The output should follow a simple text format of:
+```
+Read_ID	Cluster_ID	Forward_Read	Reverse_Read
+```
+Get the exact number of clusters
+```
+cut -f2 rcluster | uniq | wc -l 
+```
+In this case, the number of clusters is 1000.
+
+**Split clusters into smaller clusters that represent significant variants**
+The first clustering steps found RAD loci, now split the loci into alleles.
+```
+rainbow div -i rcluster -o rbdiv.out
+```
+The output of the div process is similar to the previous output with the exception that the second column is now the new divided cluster_ID (this value is numbered sequentially) and there was a column added to the end of the file that holds the original first cluster ID The parameter -f can be set to control what is the minimum frequency of an allele necessary to divide it into its own cluster Since this is from multiple individuals, we want to lower this from the default of 0.2.
+```
+rainbow div -i rcluster -o rbdiv.out -f 0.5 -K 10
+```
+A parameter of interest to add here is the -r parameter, which is the minimum number of reads to assemble. The default is 5 which works well if assembling reads from a single individual. However, we are assembling a reduced data set, so there may only be one copy of a locus. Therefore, it's more appropriate to use a cutoff of 2.
+```
+rainbow merge -o rbasm.out -a -i rbdiv.out -r 2
+```
+The rbasm output lists optimal and suboptimal contigs. Previous versions of dDocent used rainbow's included perl scripts to retrieve optimal contigs. However, as of version 2.0, dDocent uses customized AWK code to extract optimal contigs for RAD sequencing.
+```
+cat rbasm.out <(echo "E") |sed 's/[0-9]*:[0-9]*://g' | mawk ' {
+if (NR == 1) e=$2;
+else if ($1 ~/E/ && lenp > len1) {c=c+1; print ">dDocent_Contig_" e "\n" seq2 "NNNNNNNNNN" seq1; seq1=0; seq2=0;lenp=0;e=$2;fclus=0;len1=0;freqp=0;lenf=0}
+else if ($1 ~/E/ && lenp <= len1) {c=c+1; print ">dDocent_Contig_" e "\n" seq1; seq1=0; seq2=0;lenp=0;e=$2;fclus=0;len1=0;freqp=0;lenf=0}
+else if ($1 ~/C/) clus=$2;
+else if ($1 ~/L/) len=$2;
+else if ($1 ~/S/) seq=$2;
+else if ($1 ~/N/) freq=$2;
+else if ($1 ~/R/ && $0 ~/0/ && $0 !~/1/ && len > lenf) {seq1 = seq; fclus=clus;lenf=len}
+else if ($1 ~/R/ && $0 ~/0/ && $0 ~/1/) {seq1 = seq; fclus=clus; len1=len}
+else if ($1 ~/R/ && $0 ~!/0/ && freq > freqp && len >= lenp || $1 ~/R/ && $0 ~!/0/ && freq == freqp && len > lenp) {seq2 = seq; lenp = len; freqp=freq}
+}' > rainbow.fasta
+```
+First, the script looks at all the contigs assembled for a cluster. If any of the contigs contain forward and PE reads, then that contig is output as optimal. If no overlap contigs exists (the usual for most RAD data sets), then the contig with the most assembled reads PE (most common) is output with the forward read contig with a 10 N spacer. If two contigs have equal number of reads, the longer contig is output.
+
+Align and cluster data by sequence similarity with cd-hit.
+```
+cd-hit-est -i rainbow.fasta -o referenceRC.fasta -M 0 -T 0 -c 0.9
+```
+The -M and -T flags instruct the program on memory usage (-M) and number of threads (-T). Setting the value to 0 uses all available. The real parameter of significan is the -c parameter which sets the percentage of sequence similarity to group contigs by. The above code uses 90%. Try using 95%, 85%, 80%, and 99%. Since this is simulated data, we know the real number of contigs, 1000. By choosing an cutoffs of 4 and 4, we are able to get the real number of contigs, no matter what the similarty cutoff.
+
+In this example, it's easy to know the correct number of reference contigs, but with real data this is less obvious. As you just demonstrated, varying the uniq sequence copy cutoff and the final clustering similarity have the the largest effect on the number of final contigs. You could go back and retype all the steps from above to explore the data, but scripting makes this easier. Place remake_reference.sh (in this repository) in ddocentdir, or whatever your working directory is.
+```
+
 
 
