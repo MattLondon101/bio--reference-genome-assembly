@@ -109,9 +109,9 @@ EOF
 ```
 ![Coverage](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/Images/coverage_simrad1.png)
 
-Choose a cutoff value that captures as much of the diversity of the data as possible while simultaneously eliminating sequences that are likely errors. Let's try 4
+Choose a cutoff value that captures as much of the diversity of the data as possible while simultaneously eliminating sequences that are likely errors. Try 4.
 ```
-parallel --no-notice -j 8 mawk -v x=4 \''$1 >= x'\' ::: *.uniq.seqs | cut -f2 | perl -e 'while (<>) {chomp; $z{$_}++;} while(($k,$v) = each(%z)) {print "$v\t$k\n";}' > uniqCperindv
+cat pfile | parallel --no-notice mawk -v x=4 \''$1 >= x'\' ::: *.uniq.seqs | cut -f2 | perl -e 'while (<>) {chomp; $z{$_}++;} while (($k,$v) = each(%z)) {print "$v\t$k\n";}' > uniqCperindv
 wc -l uniqCperindv
 ```
 The data has been reduced down to 7598 sequences. Yet, it can be reduced further. Restrict data by the number of different individuals a sequence appears within.
@@ -137,4 +137,20 @@ pause -1
 EOF
 ```
 ![Individuals](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/Images/individuals_simrad1.png)
+
+Another cutoff value is chosen to capture maximum diversity in the data, while eliminating sequences with little value on the population scale. Try 4.
+```
+mawk -v x=4 '$1 >= x' uniqCperindv > uniq.k.4.c.4.seqs
+wc -l uniq.k.4.c.4.seqs
+```
+The data has been reduced to 3840 sequences!
+
+Convert sequences back to fasta format. This reads the totaluniqseq file line by line and adds a sequence header of >Contig X.
+```
+cut -f2 uniq.k.4.c.4.seqs > totaluniqseq
+mawk '{c= c + 1; print ">Contig_" c "\n" $1}' totaluniqseq > uniq.fasta
+```
+At this point, dDocent also checks for reads that have a substantial amount of Illumina adapter in them.
+Our data is simulated and does not contain adapter, so we'll skip that step for the time being.
+
 
