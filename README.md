@@ -224,7 +224,15 @@ This command will remake the reference with a cutoff of 20 copies of a unique se
 What you choose for a final number of contigs will be something of a judgement call. However, we could try to heuristically search the parameter space to find an optimal value.
 
 Use this repository's ReferenceOpt.sh to automate this process.
-This script uses different loops to assemble references from an interval of cutoff values and c values from 0.8-0.98.
+This script uses different loops to assemble references from an interval of cutoff values and c values from 0.8-0.98. 
+
+Run ReferenceOpt.sh. It take as a while to run (5-20 mins).
+```
+bash ReferenceOpt.sh 4 8 4 8 PE 16
+```
+[RefContigs](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/Images/refContigs_simrad1.png)
+
+You can see that the most common number of contigs across all iteration is 1000, but also that the top three occuring and the average are all within 1% of the true value Again, this is simulated data and with real data, the number of exact reference contigs is unknown and you will ultimately have to make a judgement call.
 
 
 
