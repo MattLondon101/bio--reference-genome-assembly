@@ -7,4 +7,4 @@ This guide describes the process of using genetic sequence data to plot referenc
 
 **Requirements**
 
-*Linux OS (I used Windows Subsystem for Linux) in Windows 10.
+* Linux OS (I used Windows Subsystem for Linux) in Windows 10.
