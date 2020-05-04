@@ -108,3 +108,33 @@ pause -1
 EOF
 ```
 ![Coverage](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/coverage_simrad1.png)
+
+Choose a cutoff value that captures as much of the diversity of the data as possible while simultaneously eliminating sequences that are likely errors. Let's try 4
+```
+parallel --no-notice -j 8 mawk -v x=4 \''$1 >= x'\' ::: *.uniq.seqs | cut -f2 | perl -e 'while (<>) {chomp; $z{$_}++;} while(($k,$v) = each(%z)) {print "$v\t$k\n";}' > uniqCperindv
+wc -l uniqCperindv
+```
+The data has been reduced down to 7598 sequences. Yet, it can be reduced further. Restrict data by the number of different individuals a sequence appears within.
+```
+for ((i = 2; i <= 10; i++));
+do
+echo $i >> ufile
+done
+
+cat ufile | parallel --no-notice "echo -n {}xxx && mawk -v x={} '\$1 >= x' uniqCperindv | wc -l" | mawk  '{gsub("xxx","\t",$0); print;}'| sort -g > uniqseq.peri.data
+```
+Plot the data
+```
+gnuplot << \EOF 
+set terminal dumb size 120, 30
+set autoscale 
+unset label
+set title "Number of Unique Sequences present in more than X Individuals"
+set xlabel "Number of Individuals"
+set ylabel "Number of Unique Sequences"
+plot 'uniqseq.peri.data' with lines notitle
+pause -1
+EOF
+```
+![Individuals](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/individuals_simrad1.png)
+
