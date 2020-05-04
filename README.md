@@ -10,6 +10,9 @@ This guide describes the process of using genetic sequence data to plot referenc
 * dDocent (a bash wrapper to QC, assemble, map, and call SNPs from almost any kind of RAD sequencing)
   * with conda installed in your Linux terminal:
 ```
+# create a working directory
+mkdir ddocentdir
+cd ddocentdir
 # add the bioconda channel
 conda config --add channels defaults
 conda config --add channels bioconda
@@ -19,4 +22,17 @@ conda install ddocent
 conda create -n ddocent_env ddocent
 source activate ddocent_env
 ```
-
+**Test Dataset**
+The SimRAD dataset contains DNA sequences from double digest restriction-site associated DNA (ddRAD). 
+Download the dataset, unzip it, and view contents
+```
+curl -L -o data.zip https://www.dropbox.com/s/t09xjuudev4de72/data.zip?dl=0
+unzip data.zip
+ll
+```
+Create list of just barcodes
+```
+cut -f2 SimRAD.barcodes > barcodes
+head barcodes
+```
+**Install Stack package with process_radtags**
