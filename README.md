@@ -94,6 +94,7 @@ done
 cat pfile | parallel --no-notice "echo -n {}xxx && mawk -v x={} '\$1 >= x' uniq.seqs | wc -l" | mawk  '{gsub("xxx","\t",$0); print;}'| sort -g > uniqseq.data
 ```
 Plot to terminal with gnuplot
+```
 gnuplot << \EOF 
 set terminal dumb size 120, 30
 set autoscale
@@ -106,3 +107,4 @@ plot 'uniqseq.data' with lines notitle
 pause -1
 EOF
 ```
+![Coverage](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/coverage_simrad1.png)
