@@ -37,4 +37,4 @@ head barcodes
 ```
 **Install Stacks package with process_radtags**
 
-[Download Stacks from] (http://catchenlab.life.illinois.edu/stacks/)
+[Download Stacks from](http://catchenlab.life.illinois.edu/stacks/)
