@@ -35,4 +35,5 @@ Create list of just barcodes
 cut -f2 SimRAD.barcodes > barcodes
 head barcodes
 ```
-**Install Stack package with process_radtags**
+**Install Stacks package with process_radtags**
+[Download Stacks from] (http://catchenlab.life.illinois.edu/stacks/)
