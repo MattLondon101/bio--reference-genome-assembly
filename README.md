@@ -37,4 +37,12 @@ head barcodes
 ```
 **Install Stacks package with process_radtags**
 
-Download Stacks from http://catchenlab.life.illinois.edu/stacks/
+Download Stacks from http://catchenlab.life.illinois.edu/stacks/ to ddocentdir
+Untar and install Stacks
+```
+tar xfvz stacks-2.xx.tar.gz
+cd stacks-2.xx.tar.gz
+./configure --prefix=/home/joe/ddocentdir
+sudo make install
+```
+
