@@ -107,7 +107,7 @@ plot 'uniqseq.data' with lines notitle
 pause -1
 EOF
 ```
-![Coverage](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/coverage_simrad1.png)
+![Coverage](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/Images/coverage_simrad1.png)
 
 Choose a cutoff value that captures as much of the diversity of the data as possible while simultaneously eliminating sequences that are likely errors. Let's try 4
 ```
@@ -136,5 +136,5 @@ plot 'uniqseq.peri.data' with lines notitle
 pause -1
 EOF
 ```
-![Individuals](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/individuals_simrad1.png)
+![Individuals](https://github.com/MattLondon101/Reference-Genome-Assembly/blob/master/Images/individuals_simrad1.png)
 
