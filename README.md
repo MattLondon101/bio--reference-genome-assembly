@@ -234,5 +234,56 @@ bash ReferenceOpt.sh 4 8 4 8 PE 16
 
 You can see that the most common number of contigs across all iteration is 1000, but also that the top three occuring and the average are all within 1% of the true value Again, this is simulated data and with real data, the number of exact reference contigs is unknown and you will ultimately have to make a judgement call.
 
+Examine the reference
+```
+bash remake_reference.sh 4 4 0.90 PE 2
+head reference.fasta
+```
+```
+>dDocent_Contig_1
+NAATTCCTCCGACATTGTCGGCTTTAAATAGCTCATAACTTGAGCCCAGGTAAAGACTTTAGTATACTCGCACCTTCCGCTTATCCCCCGGCCGCNNNNNNNNNNATTCAACCGCGGGACCTGAACTAACATAGCGTTGTGTATACCATCCGAGGTAACCTTATAACTCTCTGCCATTCGGACAGGTAACACGGCATATCGTCCGN
+>dDocent_Contig_2
+NAATTCAGAATGGTCATACAGGGCGGTAGAATGGAATCCTGAATCGAATGGCGGTTGCATTGAGAACCTGGTACCAGATAGGATCTGGATTAAATNNNNNNNNNNGTCGGGTACTAATTATCTATTGGGTCCAAACCCTCCGCCCCGTTTACTGCCCACCCGGCATGCAGTCATGAGAATTCCAAGGAACTAAGATAAGAGACCGN
+>dDocent_Contig_3
+NAATTCGGGCTCCTTGGAGAGATTCTTTCAATTATGCCCCCTACGTGGGAAACAGGGTCGGAAGTGGTCGGCTGAGAATTACTCGAAAGCCGCTCNNNNNNNNNNCCACCAGCATGATAGGACTTCAAGCTTGCCGTTTGTTGGGAGGACCGGTCGCTACGGAGCTGACGCTATCTCCCGCATCGGACCTCGTGGACAAAAACCGN
+>dDocent_Contig_4
+NAATTCAAAAGTCGCCCATAGGTACGTGATGAATTAGGTCAAGCGGGGACGTCGCATAGATGCGTGACGTCTGGAGCATGATGTTGTTTCTAACCNNNNNNNNNNAATCACTCGGTCAACGTGGTCCGTGCTCTGCAACGAAAAAAACTTCGCATGTGAACGATGATGCCTATAGGTGCGACCGCCGTCAGAGGCCCGTTGACCGN
+>dDocent_Contig_5
+NAATTCATACGGATATGATACTTCGTCTGGCAGGGTGGCTAGCGAGTTTAAGGATTCTTGGATAAAGGTAGGTAAAATTCTCGAGATTCTGATCTNNNNNNNNNNTAGAGGTGCTGGCGGGGCCTAGACGTGTTTCTACGCTTACTGATCAAATTAGCTAGCTTAGGTTCCTATAGTCTACGCTGGATTGTCCTTAGATGCACCGN
+```
+You can now see that we have complete RAD fragments starting with our EcoRI restriction site (AATT), followed by R1, then a filler of 10Ns, and then R2 ending with the mspI restriction site (CCG). The start and end of the sequence are buffered with a single N
+
+We can use simple shell commands to query this data. Find out how many lines in the file (this is double the number of sequences)
+```
+wc -l reference.fasta
+```
+Find out how many sequences there are directly by counting lines that only start with the header character ">"
+```
+mawk '/>/' reference.fasta | wc -l
+```
+We can test that all sequences follow the expected format.
+```
+mawk '/^NAATT.*N*.*CCGN$/' reference.fasta | wc -l
+grep '^NAATT.*N*.*CCGN$' reference.fasta | wc -l
+```
+1000 it is!
+
+**Assemble references**
+Assemble references across cutoff values, then map 20 random samples and evaluate mappings to the reference, along with number of contigs and coverage.
+
+Run this repository's RefMapOpt.sh. It take as a while to run (5-20 mins).
+```
+RefMapOpt.sh 4 8 4 8 0.9 64 PE
+```
+This will loop across cutoffs of 4-8 using a similarity of 90% for clustering, parellized across 64 processors, using PE assembly technique.
+
+The output is stored in a file called mapping.results
+```
+cat mapping.results
+```
+The output contains the average coverage per contig, the average coverage per contig not counting zero coverage contigs, the number of contigs, the mean number of contigs mapped, the two cutoff values used, the sum of all mapped reads, the sum of all properly mapped reads, the mean number of mapped reads, the mean number of properly mapped reads, and the number of reads that are mapped to mismatching contigs. Here, we are looking to values that maximize properly mapped reads, the mean number of contigs mapped, and the coverage. In this example, it's easy. Values 4,7 produce the highes number of properly mapped reads, coverage, and contigs.
+Real data will involve a judgement call.
+
+
 
 
