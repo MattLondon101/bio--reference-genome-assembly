@@ -215,7 +215,16 @@ cd-hit-est -i rainbow.fasta -o referenceRC.fasta -M 0 -T 0 -c 0.9
 The -M and -T flags instruct the program on memory usage (-M) and number of threads (-T). Setting the value to 0 uses all available. The real parameter of significan is the -c parameter which sets the percentage of sequence similarity to group contigs by. The above code uses 90%. Try using 95%, 85%, 80%, and 99%. Since this is simulated data, we know the real number of contigs, 1000. By choosing an cutoffs of 4 and 4, we are able to get the real number of contigs, no matter what the similarty cutoff.
 
 In this example, it's easy to know the correct number of reference contigs, but with real data this is less obvious. As you just demonstrated, varying the uniq sequence copy cutoff and the final clustering similarity have the the largest effect on the number of final contigs. You could go back and retype all the steps from above to explore the data, but scripting makes this easier. Place remake_reference.sh (in this repository) in ddocentdir, or whatever your working directory is.
+
+Remake reference by calling the script along with a new cutoff value and similarity.
 ```
+bash remake_reference.sh 4 4 0.90 PE 2
+```
+This command will remake the reference with a cutoff of 20 copies of a unique sequence to use for assembly and a final clustering value of 90%. It will output the number of reference sequences and create a new, indexed reference with the given parameters. The output from the code above should be "1000" Experiment with some different values on your own.
+What you choose for a final number of contigs will be something of a judgement call. However, we could try to heuristically search the parameter space to find an optimal value.
+
+Use this repository's ReferenceOpt.sh to automate this process.
+This script uses different loops to assemble references from an interval of cutoff values and c values from 0.8-0.98.
 
 
 
