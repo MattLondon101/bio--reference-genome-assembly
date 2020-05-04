@@ -45,4 +45,21 @@ cd stacks-2.xx.tar.gz
 ./configure --prefix=/home/joe/ddocentdir
 sudo make install
 ```
+Run process_radtags
+```
+process_radtags -1 SimRAD_R1.fastq.gz -2 SimRAD_R2.fastq.gz -b barcodes -e ecoRI --renz_2 mspI -r -i gzfastq
+```
+The option -e specifies the 5' restriction site and --renze_2 specifes the 3' restriction site. -i states the format of the input sequences. The -r option tells the program to fix cut sites and barcodes that have up to 1-2 mutations in them.
 
+When the program is completed, ddocentdir should have several files that look like: sample_AAGAGG.1.fq.gz, sample_AAGAGG.2.fq.gz, sample_AAGAGG.rem.1.fq.gz, and sample_AAGAGG.rem.2.fq.gz
+
+The .rem..fq.gz files would normally have files that fail process_radtags (bad barcode, ambitious cut sites), but we have simulated data and none of those bad reads. We can delete.
+```
+rm *rem*
+```
+The individual files are currently only names by barcode sequence. They can be renamed in an easier convention with the following bash script. It reads the names into an array and all barcodes into second array, gets length of both arrays, then iterates the task of renaming the samples.
+```
+curl -L -O https://github.com/jpuritz/dDocent/raw/master/Rename_for_dDocent.sh
+bash Rename_for_dDocent.sh SimRAD.barcodes
+ls *.fq.gz
+```
