@@ -6,7 +6,7 @@ A reference genome (aka reference assembly) serves as a representative sample of
 This guide describes the process of using genetic sequence data to plot reference contig data, generate a fasta file with complete restriction enzyme associated DNA (RAD) fragments, and output the optimal interval of cutoff values to capture maximum diversity and accuracy.
 
 **Requirements**
-* Linux OS (I used Windows Subsystem for Linux in Windows 10)
+* Linux OS (I used Windows Subsystem for Linux (WSL) in Windows 10)
 * dDocent (a bash wrapper to QC, assemble, map, and call SNPs from almost any kind of RAD sequencing)
   * with conda installed in your Linux terminal:
 ```
