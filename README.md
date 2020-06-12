@@ -309,7 +309,7 @@ Cov		Non0Cov	Contigs	MeanContigsMapped	K1	K2	SUM Mapped	SUM Properly	Mean Mapped
 37.4274	39.7517	997		939.7				8	7	747052		746779			37352.6		37338.9			0
 37.5014	39.8269	989		932.25				8	8	742528		742279			37126.4		37113.9			0
 ```
-The output contains the average coverage per contig, the average coverage per contig not counting zero coverage contigs, the number of contigs, the mean number of contigs mapped, the two cutoff values used, the sum of all mapped reads, the sum of all properly mapped reads, the mean number of mapped reads, the mean number of properly mapped reads, and the number of reads that are mapped to mismatching contigs. Here, we are looking to values that maximize properly mapped reads, the mean number of contigs mapped, and the coverage. In this example, it's easy. Values 4,7 produce the highes number of properly mapped reads, coverage, and contigs.
+The output contains the average coverage per contig, the average coverage per contig not counting zero coverage contigs, the number of contigs, the mean number of contigs mapped, the two cutoff values used, the sum of all mapped reads, the sum of all properly mapped reads, the mean number of mapped reads, the mean number of properly mapped reads, and the number of reads that are mapped to mismatching contigs. Here, we are looking to values that maximize properly mapped reads, the mean number of contigs mapped, and the coverage. In this example, it's easy. Values 4,7 produce the highest number of properly mapped reads, coverage, and contigs.
 Real data will involve a judgement call.
 
 
