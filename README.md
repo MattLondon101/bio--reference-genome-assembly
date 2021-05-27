@@ -313,5 +313,5 @@ The output contains the average coverage per contig, the average coverage per co
 Real data will involve a judgement call.
 
 
-
+Updated 5/7/21
 
